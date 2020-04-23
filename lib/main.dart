@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:covid_app/municipio.dart';
+import 'package:covid_app/ui/main/main_screen.dart';
+import 'package:covid_app/ui/navigation/navigator_bar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: Covid(),
+      home: NavigationBar(),
     );
   }
 }
@@ -47,9 +49,10 @@ class _CovidState extends State<Covid> {
     String jsonString = await _loadAStudentAsset();
     var jsonBody = json.decode(jsonString);
     List jsonData = jsonBody['data'];
-    List<Municipio> monte = [];
     jsonData.forEach((municipio){
-      if(municipio['zona_basica_salud']== 'Montecarmelo'){
+      if(municipio['municipio_distrito']== 'Madrid-Fuencarral-El Pardo'){
+        print('------------------');
+        print(municipio['fecha_informe']);
         print(municipio['casos_confirmados_totales']);
       }
     });
