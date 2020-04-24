@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:covid_app/data/district.dart';
 import 'package:covid_app/repository/remote_repository/http_remote_repository.dart';
 import 'package:covid_app/ui/main/main_presenter.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -17,6 +20,8 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   TextEditingController _typeAheadController = TextEditingController();
   String _selectedDistrict;
   IconButton _sufixIcon;
+  WebViewController _controller;
+
 
   @override
   void initState() {
@@ -39,6 +44,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Container(
           child: SingleChildScrollView(
             child: (Column(
@@ -149,6 +155,61 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                     ),
                   ),
                 ),
+                Container(
+                  decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text('Situación de Madrid', style: TextStyle(fontSize: 26),),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.97,
+                            height: 300,
+                            child: WebView(
+                              initialUrl: 'https://datawrapper.dwcdn.net/tWpPl/5/',
+                              javascriptMode: JavascriptMode.unrestricted,
+
+                              onWebViewCreated: (WebViewController webViewController) {
+                                _controller = webViewController;
+                                _controller.loadUrl('https://datawrapper.dwcdn.net/tWpPl/5/');
+
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Card(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width*0.8,
+                          decoration: BoxDecoration(border: Border.all(color: Colors.greenAccent)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Column(
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text('Infectados',style: TextStyle(fontSize: 20),),
+                                        Text('36821', style: TextStyle(fontSize: 15),)
+                                      ],
+                                    ),
+
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
               ],
             )),
           ),
