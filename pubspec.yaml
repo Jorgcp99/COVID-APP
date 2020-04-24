@@ -27,6 +27,7 @@ dependencies:
   oauth2: 1.5.0
   google_fonts: ^1.0.0
   intl: ^0.15.8
+  flutter_typeahead: 1.8.0
 
 dev_dependencies:
   flutter_test:
