@@ -1,8 +1,7 @@
-import 'dart:async';
 
-import 'package:covid_app/data/chart.dart';
 import 'package:covid_app/data/district.dart';
 import 'package:covid_app/data/district_data.dart';
+import 'package:covid_app/data/global_show_info.dart';
 import 'package:covid_app/repository/remote_repository/http_remote_repository.dart';
 import 'package:covid_app/ui/main/main_presenter.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +23,9 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   IconButton _sufixIcon;
   WebViewController _controller;
   double _chartMaxWidth;
-  List<Chart> _chartList;
   Size _districtInfoSize;
   DistrictData _selectedDistrict;
+  GlobalShowInfo _globalData;
 
   @override
   void initState() {
@@ -35,12 +34,12 @@ class _MainScreenState extends State<MainScreen> implements MainView {
     _districts = [];
     _selectedDistrictName = 'Seleccione un distrito';
     _selectedDistrict = DistrictData('', '', 0, 0, 0.0);
+    _globalData = GlobalShowInfo(0,0,0,0,0,0);
     _sufixIcon = IconButton(
       icon: Icon(Icons.search),
     );
-    _chartList = [];
-    _presenter.getChartsData();
     _districtInfoSize = Size(0, 0);
+    _presenter.getGlobalData();
   }
 
   @override
@@ -243,7 +242,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(20.0),
+                        padding: const EdgeInsets.fromLTRB(20.0, 0, 20, 15),
                         child: Card(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           elevation: 3.0,
@@ -255,7 +254,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                             children: <Widget>[
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.87,
-                                height: 740,
+                                height: 755,
                                 child: WebView(
                                   initialUrl:
                                   'https://twitter.com/i/events/1219057585707315201',
@@ -419,7 +418,6 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   }
 
   Widget buildChart(int index) {
-    Chart chart = _chartList[index];
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Column(
@@ -429,11 +427,11 @@ class _MainScreenState extends State<MainScreen> implements MainView {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                chart.title,
+                index==0?'Infectados':index==1?'Fallecidos':'Recuperados',
                 style: TextStyle(fontSize: 17),
               ),
               Text(
-                chart.count.toString(),
+                index==0?_globalData.totalCases.toString():index==1?_globalData.fallecidos.toString():_globalData.recuperados.toString(),
                 style: TextStyle(fontSize: 15),
               )
             ],
@@ -443,12 +441,12 @@ class _MainScreenState extends State<MainScreen> implements MainView {
             child: TweenAnimationBuilder(
                 tween: SizeTween(
                     begin: Size(0, 5),
-                    end: Size(_chartMaxWidth * chart.chartWidth, 5)),
+                    end: Size(_chartMaxWidth * (index==0?1:index==1?0.15:0.36), 5)),
                 duration: Duration(milliseconds: 1600),
                 builder: (_, Size size, __) {
                   return Container(
                     decoration: BoxDecoration(
-                        color: chart.chartColor,
+                        color: index==0?Colors.yellow:index==1?Colors.red:Colors.green,
                         borderRadius: BorderRadius.all(Radius.circular(4))),
                     width: size.width,
                     height: 9,
@@ -483,16 +481,16 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   }
 
   @override
-  showChartList(List<Chart> charts) {
+  showSelectedDistrict(DistrictData district) {
     setState(() {
-      _chartList = charts;
+      _selectedDistrict = district;
     });
   }
 
   @override
-  showSelectedDistrict(DistrictData district) {
+  showGlobalData(GlobalShowInfo data) {
     setState(() {
-      _selectedDistrict = district;
+      _globalData = data;
     });
   }
 }

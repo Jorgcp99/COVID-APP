@@ -2,9 +2,10 @@
 
 import 'dart:collection';
 
-import 'package:covid_app/data/chart.dart';
 import 'package:covid_app/data/district.dart';
 import 'package:covid_app/data/district_data.dart';
+import 'package:covid_app/data/global_data.dart';
+import 'package:covid_app/data/global_show_info.dart';
 import 'package:covid_app/repository/remote_repository/http_remote_repository.dart';
 import 'package:flutter/material.dart';
 
@@ -34,28 +35,31 @@ class MainPresenter{
        _view.showDistrictList(districtList);
   }
 
-  getChartsData(){
-    List<Chart> charts = [Chart('Infectados', 36409, 1, Colors.yellow),Chart('Fallecidos', 8472, 0.15, Colors.red),Chart('Recuperados', 16320, 0.36, Color.fromRGBO(101, 199, 178, 1.0)), ];
-    _view.showChartList(charts);
-  }
-
   getDistrictInfo(String districtId) async{
     List<District> compareDistricts = await _remoteRepository.getDistrictInfo(districtId);
     String distId = compareDistricts[0].id;
     String distName= compareDistricts[0].name;
     int todayNewCases = compareDistricts[0].numCasos-compareDistricts[1].numCasos;
-    int yesterdatNewCases = compareDistricts[1].numCasos-compareDistricts[2].numCasos;
-    double differencePercentage = todayNewCases==yesterdatNewCases?0.0:(1- (todayNewCases/yesterdatNewCases))*100;
-    print(todayNewCases);
-    print(yesterdatNewCases);
-    print(differencePercentage);
-    _view.showSelectedDistrict(DistrictData(distId, distName, todayNewCases, yesterdatNewCases, differencePercentage));
+    int yesterdayNewCases = compareDistricts[1].numCasos-compareDistricts[2].numCasos;
+    double differencePercentage = todayNewCases==yesterdayNewCases?0.0:(1- (todayNewCases/yesterdayNewCases))*100;
+    _view.showSelectedDistrict(DistrictData(distId, distName, todayNewCases, yesterdayNewCases, differencePercentage));
 
+  }
+
+  getGlobalData()async{
+    List<GlobalData> data = await _remoteRepository.getMadridInfo();
+    GlobalData currData = data[data.length-2];
+    int todayNewCases = currData.casosConfirmados - data[data.length-3].casosConfirmados;
+    int yesterdayNewCases = data[data.length-3].casosConfirmados - data[data.length-4].casosConfirmados;
+    double differencePercentage = todayNewCases==yesterdayNewCases?0.0:(1- (todayNewCases/yesterdayNewCases))*100;
+    int totalCases = currData.casosConfirmados;
+    GlobalShowInfo globalData = GlobalShowInfo(todayNewCases, yesterdayNewCases, totalCases, differencePercentage, currData.fallecidos,currData.recuperados);
+    _view.showGlobalData(globalData);
   }
 }
 
 abstract class MainView{
   showDistrictList(List<District> districts);
-  showChartList(List<Chart> charts);
   showSelectedDistrict(DistrictData district);
+  showGlobalData(GlobalShowInfo data);
 }
