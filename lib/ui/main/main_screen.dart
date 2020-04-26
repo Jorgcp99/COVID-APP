@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:covid_app/data/chart.dart';
 import 'package:covid_app/data/district.dart';
+import 'package:covid_app/data/district_data.dart';
 import 'package:covid_app/repository/remote_repository/http_remote_repository.dart';
 import 'package:covid_app/ui/main/main_presenter.dart';
 import 'package:flutter/material.dart';
@@ -18,24 +20,34 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   MainPresenter _presenter;
   List<District> _districts;
   TextEditingController _typeAheadController = TextEditingController();
-  String _selectedDistrict;
+  String _selectedDistrictName;
   IconButton _sufixIcon;
   WebViewController _controller;
-
+  double _chartMaxWidth;
+  List<Chart> _chartList;
+  Size _districtInfoSize;
+  DistrictData _selectedDistrict;
 
   @override
   void initState() {
     _presenter = MainPresenter(this, HttpRemoteRepository(Client()));
     _presenter.getDistrictList();
     _districts = [];
-    _selectedDistrict = 'Seleccione un distrito';
+    _selectedDistrictName = 'Seleccione un distrito';
+    _selectedDistrict = DistrictData('', '', 0, 0, 0.0);
     _sufixIcon = IconButton(
       icon: Icon(Icons.search),
     );
+    _chartList = [];
+    _presenter.getChartsData();
+    _districtInfoSize = Size(0, 0);
   }
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      _chartMaxWidth = MediaQuery.of(context).size.width;
+    });
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -114,19 +126,19 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
                   child: Container(
                     child: Form(
                       child: TypeAheadField(
                         textFieldConfiguration: TextFieldConfiguration(
                             controller: _typeAheadController,
                             decoration: InputDecoration(
-                              labelText: _selectedDistrict,
+                              labelText: _selectedDistrictName,
                               suffixIcon: _sufixIcon,
                               border: OutlineInputBorder(),
                             )),
                         suggestionsCallback: (pattern) {
-                          return getDistrictRecomendation(pattern);
+                          return getDistrictClue(pattern);
                         },
                         itemBuilder: (context, suggestion) {
                           District dis = suggestion as District;
@@ -136,12 +148,15 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                         },
                         onSuggestionSelected: (suggestion) {
                           District dist = suggestion as District;
+                          _presenter.getDistrictInfo(dist.id);
                           _typeAheadController.text = dist.name;
+                          expandDistrictInfo();
                           setState(() {
                             _sufixIcon = IconButton(
                               icon: Icon(Icons.clear),
                               onPressed: () {
                                 _typeAheadController.clear();
+                                minimizeDistrictInfo();
                                 setState(() {
                                   _sufixIcon = IconButton(
                                     icon: Icon(Icons.search),
@@ -155,57 +170,71 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                     ),
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    districtInfo(),
+                  ],
+                ),
                 Container(
-                  decoration: BoxDecoration(border: Border.all(color: Colors.red)),
                   child: Column(
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
-                        child: Text('Situación de Madrid', style: TextStyle(fontSize: 26),),
+                        child: Text(
+                          'Situación de Madrid',
+                          style: TextStyle(fontSize: 26),
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Container(
-                            width: MediaQuery.of(context).size.width*0.97,
+                            width: MediaQuery.of(context).size.width * 0.97,
                             height: 300,
                             child: WebView(
-                              initialUrl: 'https://datawrapper.dwcdn.net/tWpPl/5/',
+                              initialUrl:
+                                  'https://datawrapper.dwcdn.net/tWpPl/5/',
                               javascriptMode: JavascriptMode.unrestricted,
-
-                              onWebViewCreated: (WebViewController webViewController) {
+                              onWebViewCreated:
+                                  (WebViewController webViewController) {
                                 _controller = webViewController;
-                                _controller.loadUrl('https://datawrapper.dwcdn.net/tWpPl/5/');
-
+                                _controller.loadUrl(
+                                    'https://datawrapper.dwcdn.net/tWpPl/5/');
                               },
                             ),
                           ),
                         ],
                       ),
                       Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        elevation: 3.0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14))),
                         child: Container(
-                          width: MediaQuery.of(context).size.width*0.8,
-                          decoration: BoxDecoration(border: Border.all(color: Colors.greenAccent)),
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(240, 240, 240, 1.0),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(18.0),
                             child: Column(
                               children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text('Infectados',style: TextStyle(fontSize: 20),),
-                                        Text('36821', style: TextStyle(fontSize: 15),)
-                                      ],
-                                    ),
-
-                                  ],
-                                )
+                                Text(
+                                  'Recuento total',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                buildChart(0),
+                                buildChart(1),
+                                buildChart(2),
                               ],
                             ),
                           ),
                         ),
+                      ),
+                      SizedBox(
+                        height: 200,
                       )
                     ],
                   ),
@@ -218,7 +247,183 @@ class _MainScreenState extends State<MainScreen> implements MainView {
     );
   }
 
-  List<District> getDistrictRecomendation(String query) {
+  Widget districtInfo() {
+    return TweenAnimationBuilder(
+      tween: SizeTween(
+          begin: Size(MediaQuery.of(context).size.width * 0.9, 0),
+          end: _districtInfoSize),
+      duration: Duration(milliseconds: 600),
+      builder: (_, Size size, __) {
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(18, 5, 18, 15),
+            child: Card(
+              elevation: 3.0,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(14))),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: size.height,
+                color: Color.fromRGBO(240, 240, 240, 1.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Text(
+                              'Hoy',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                          children: <Widget>[
+                              Text(
+                                _selectedDistrict.todayNewCases.toString(),
+                                style: TextStyle(fontSize: 24, color: Colors.red),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 15),
+                                child: Icon(
+                                  Icons.arrow_drop_up,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: showProgressPercentage(
+                                    _selectedDistrict.differencePercentage),
+                              )
+                          ],
+                        ),
+                            )),
+                      ],
+                    ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 6),
+                              child: Text(
+                                'Ayer',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Row(
+                            children: <Widget>[
+                                Text(
+                                  _selectedDistrict.yesterdayNewCases.toString(),
+                                  style: TextStyle(fontSize: 24, color: Colors.red),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 15),
+                                  child: Icon(
+                                    Icons.arrow_drop_up,
+                                    color: Colors.red,
+                                  ),
+                                )
+                            ],
+                          ),
+                              )),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Text showProgressPercentage(double percentage) {
+    int per = percentage.floor();
+    if (per.isNegative) {
+      per = per * (-1);
+      return Text(
+        '+' + per.toString() + '%',
+        style: TextStyle(color: Colors.red, fontSize: 17),
+      );
+    } else {
+      return Text(
+        '-' + per.toString() + '%',
+        style: TextStyle(color: Colors.green, fontSize: 17),
+      );
+    }
+  }
+
+  expandDistrictInfo() {
+    setState(() {
+      _districtInfoSize = Size(MediaQuery.of(context).size.width, 80);
+    });
+  }
+
+  minimizeDistrictInfo() {
+    setState(() {
+      _districtInfoSize = Size(MediaQuery.of(context).size.width, 0);
+    });
+  }
+
+  Widget buildChart(int index) {
+    Chart chart = _chartList[index];
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                chart.title,
+                style: TextStyle(fontSize: 17),
+              ),
+              Text(
+                chart.count.toString(),
+                style: TextStyle(fontSize: 15),
+              )
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: TweenAnimationBuilder(
+                tween: SizeTween(
+                    begin: Size(0, 5),
+                    end: Size(_chartMaxWidth * chart.chartWidth, 5)),
+                duration: Duration(milliseconds: 1600),
+                builder: (_, Size size, __) {
+                  return Container(
+                    decoration: BoxDecoration(
+                        color: chart.chartColor,
+                        borderRadius: BorderRadius.all(Radius.circular(4))),
+                    width: size.width,
+                    height: 9,
+                  );
+                }),
+          )
+        ],
+      ),
+    );
+  }
+
+  List<District> getDistrictClue(String query) {
     print(query);
     List<District> districts = [];
     _districts.forEach((district) {
@@ -238,6 +443,20 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   showDistrictList(List<District> districts) {
     setState(() {
       _districts = districts;
+    });
+  }
+
+  @override
+  showChartList(List<Chart> charts) {
+    setState(() {
+      _chartList = charts;
+    });
+  }
+
+  @override
+  showSelectedDistrict(DistrictData district) {
+    setState(() {
+      _selectedDistrict = district;
     });
   }
 }

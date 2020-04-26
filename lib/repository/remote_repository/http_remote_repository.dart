@@ -13,7 +13,7 @@ class HttpRemoteRepository implements RemoteRepository{
 
   HttpRemoteRepository(this._client);
   @override
-  Future<HashMap<String, District>> getDistrictsList() async{
+  Future<HashMap<String, District>>  getDistrictsList() async{
     String jsonString = await rootBundle.loadString('assets/json_data.json');
     var jsonBody = json.decode(jsonString);
     HashMap districtsMap = HashMap<String, District>();
@@ -25,6 +25,22 @@ class HttpRemoteRepository implements RemoteRepository{
 
     });
     return districtsMap;
+  }
+
+  Future<List<District>> getDistrictInfo(String districtId)async{
+    String jsonString = await rootBundle.loadString('assets/json_data.json');
+    var jsonBody = json.decode(jsonString);
+    List<District> districtList = [];
+    List jsonData = jsonBody['data'];
+    int cont = 0;
+    jsonData.forEach((district){
+      var dist = District.fromMap(district);
+      if(dist.id == districtId && cont<3){
+        districtList.add(dist);
+        cont ++;
+      }
+    });
+    return districtList;
   }
 
 }
