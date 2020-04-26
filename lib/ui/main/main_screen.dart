@@ -179,12 +179,13 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                 Container(
                   child: Column(
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Text(
-                          'Situación de Madrid',
-                          style: TextStyle(fontSize: 26),
-                        ),
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text('Situación en Madrid', style: TextStyle(fontSize: 25),),
+                          ),
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -233,9 +234,44 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 200,
-                      )
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text('Ultimas noticicas', style: TextStyle(fontSize: 25),),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Card(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          elevation: 3.0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(14))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.87,
+                                height: 740,
+                                child: WebView(
+                                  initialUrl:
+                                  'https://twitter.com/i/events/1219057585707315201',
+                                  javascriptMode: JavascriptMode.unrestricted,
+                                  onWebViewCreated:
+                                      (WebViewController webViewController) {
+                                    _controller = webViewController;
+                                    _controller.loadUrl(
+                                        'https://twitter.com/i/events/1219057585707315201');
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -266,7 +302,8 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: size.height,
                 color: Color.fromRGBO(240, 240, 240, 1.0),
-                child: Row(
+                child: _selectedDistrict.todayNewCases==null?Container():
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Column(
@@ -286,25 +323,25 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 5),
                               child: Row(
-                          children: <Widget>[
-                              Text(
-                                _selectedDistrict.todayNewCases.toString(),
-                                style: TextStyle(fontSize: 24, color: Colors.red),
+                                children: <Widget>[
+                                  Text(
+                                    _selectedDistrict.todayNewCases.toString(),
+                                    style: TextStyle(fontSize: 24, color: Colors.red),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 15),
+                                    child: Icon(
+                                      Icons.arrow_drop_up,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 15),
+                                    child: showProgressPercentage(
+                                        _selectedDistrict.differencePercentage),
+                                  )
+                                ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 15),
-                                child: Icon(
-                                  Icons.arrow_drop_up,
-                                  color: Colors.red,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 15),
-                                child: showProgressPercentage(
-                                    _selectedDistrict.differencePercentage),
-                              )
-                          ],
-                        ),
                             )),
                       ],
                     ),
@@ -325,20 +362,20 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 5),
                                 child: Row(
-                            children: <Widget>[
-                                Text(
-                                  _selectedDistrict.yesterdayNewCases.toString(),
-                                  style: TextStyle(fontSize: 24, color: Colors.red),
+                                  children: <Widget>[
+                                    Text(
+                                      _selectedDistrict.yesterdayNewCases.toString(),
+                                      style: TextStyle(fontSize: 24, color: Colors.red),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 15),
+                                      child: Icon(
+                                        Icons.arrow_drop_up,
+                                        color: Colors.red,
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 15),
-                                  child: Icon(
-                                    Icons.arrow_drop_up,
-                                    color: Colors.red,
-                                  ),
-                                )
-                            ],
-                          ),
                               )),
                         ],
                       ),
@@ -424,7 +461,6 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   }
 
   List<District> getDistrictClue(String query) {
-    print(query);
     List<District> districts = [];
     _districts.forEach((district) {
       if (district.name.toLowerCase().contains(query.toLowerCase())) {

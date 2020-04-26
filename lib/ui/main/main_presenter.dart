@@ -45,7 +45,9 @@ class MainPresenter{
     String distName= compareDistricts[0].name;
     int todayNewCases = compareDistricts[0].numCasos-compareDistricts[1].numCasos;
     int yesterdatNewCases = compareDistricts[1].numCasos-compareDistricts[2].numCasos;
-    double differencePercentage = (1- (todayNewCases/yesterdatNewCases))*100;
+    double differencePercentage = todayNewCases==yesterdatNewCases?0.0:(1- (todayNewCases/yesterdatNewCases))*100;
+    print(todayNewCases);
+    print(yesterdatNewCases);
     print(differencePercentage);
     _view.showSelectedDistrict(DistrictData(distId, distName, todayNewCases, yesterdatNewCases, differencePercentage));
 
