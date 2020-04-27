@@ -34,7 +34,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
     _districts = [];
     _selectedDistrictName = 'Seleccione un distrito';
     _selectedDistrict = DistrictData('', '', 0, 0, 0.0);
-    _globalData = GlobalShowInfo(0,0,0,0,0,0);
+    _globalData = GlobalShowInfo(0,0,0,0,0,0,0,0);
     _sufixIcon = IconButton(
       icon: Icon(Icons.search),
     );
@@ -233,11 +233,51 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        child: Card(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          elevation: 3.0,
+                          color: Color.fromRGBO(240, 240, 240, 1.0),
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(14))),
+                          child: Container(
+                            height: 80,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      _globalData.todayCases.toString(),
+
+                                    ),
+                                  ],
+                                ),Row(
+                                  children: <Widget>[
+                                    Text(
+                                      _globalData.tadayFallecidos.toString(),
+                                    ),
+                                  ],
+                                ),Row(
+                                  children: <Widget>[
+                                    Text(
+                                      _globalData.todayRecuperados.toString(),
+
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                       Row(
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(20.0),
-                            child: Text('Ultimas noticicas', style: TextStyle(fontSize: 25),),
+                            child: Text('Ultimas noticias', style: TextStyle(fontSize: 25),),
                           ),
                         ],
                       ),
@@ -458,6 +498,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
     );
   }
 
+
   List<District> getDistrictClue(String query) {
     List<District> districts = [];
     _districts.forEach((district) {
@@ -491,6 +532,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   showGlobalData(GlobalShowInfo data) {
     setState(() {
       _globalData = data;
+
     });
   }
 }
