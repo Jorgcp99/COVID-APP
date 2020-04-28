@@ -31,6 +31,7 @@ dependencies:
   webview_flutter: 0.3.20
   qr_flutter: 3.2.0
   qrscan: 0.2.17
+  flutter_dialogflow: ^0.1.3
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +59,11 @@ flutter:
     - assets/logo.png
     - assets/covidWorld.png
     - assets/covidMask.png
+    - assets/credenciales.json
+    - assets/manos.jpg
+    - assets/resfriado.jpg
+    - assets/covid.jpg
+    - assets/send2.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
