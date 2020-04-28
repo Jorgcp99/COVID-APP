@@ -1,5 +1,6 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid_app/data/event.dart';
 import 'package:covid_app/repository/remote_repository/http_remote_repository.dart';
 import 'package:covid_app/ui/events/events_presenter.dart';
@@ -25,7 +26,7 @@ class _EventsScreenState extends State<EventsScreen> implements EventsView{
   void initState() {
     super.initState();
     _presenter = EventsPresenter(this, HttpRemoteRepository(Client()));
-    _presenter.getDistrictInfo();
+    _presenter.getFirebaseEvents();
     this._inputController = new TextEditingController();
     this._outputController = new TextEditingController();
     _events = [];
@@ -46,7 +47,6 @@ class _EventsScreenState extends State<EventsScreen> implements EventsView{
             icon: Icon(Icons.photo_camera),
             onPressed: ()=> _scan(),
           ),
-          Text(_outputController.text),
           Expanded(
             child: Container(
               child: ListView.builder(
@@ -55,6 +55,7 @@ class _EventsScreenState extends State<EventsScreen> implements EventsView{
                     return ListTile(
                       title: Text(_events[index].title),
                       subtitle: Text(_events[index].date),
+                      trailing: Text(_events[index].numEntradas.toString() ),
                     );
                   }),
             ),

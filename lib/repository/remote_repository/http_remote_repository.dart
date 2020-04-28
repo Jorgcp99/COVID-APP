@@ -69,11 +69,15 @@ class HttpRemoteRepository implements RemoteRepository{
     List events = jsonBody['@graph'];
     List<Event> eventList =[];
     events.forEach((event){
+      var address = event['address']['area']['street-address'];
       Event ev = Event.fromMap(event);
+      ev.streetAddress = address;
       eventList.add(ev);
     });
     return eventList;
   }
+
+
 
 
 }
