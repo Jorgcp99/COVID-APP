@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:covid_app/data/district.dart';
+import 'package:covid_app/data/event.dart';
 import 'package:covid_app/data/global_data.dart';
 import 'package:covid_app/repository/remote_repository/remote_repository.dart';
 import 'package:http/http.dart';
@@ -58,6 +59,20 @@ class HttpRemoteRepository implements RemoteRepository{
     });
     return dataList;
 
+  }
+
+  @override
+  Future<List<Event>> getEventsInfo() async{
+    String url = 'https://datos.madrid.es/egob/catalogo/210673-0-eventos-igualdad-inmigrantes-100.json';
+    var response = await _client.get(url);
+    var jsonBody = json.decode(response.body);
+    List events = jsonBody['@graph'];
+    List<Event> eventList =[];
+    events.forEach((event){
+      Event ev = Event.fromMap(event);
+      eventList.add(ev);
+    });
+    return eventList;
   }
 
 
