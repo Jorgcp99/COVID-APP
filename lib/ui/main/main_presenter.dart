@@ -50,6 +50,7 @@ class MainPresenter {
   }
 
   getDistrictList() async {
+    _remoteRepository.getEventsInfo();
     List<District> districtList = [];
     _districts = await _remoteRepository.getDistrictsList();
     _districts.values.toList().forEach((district) {
@@ -89,8 +90,6 @@ class MainPresenter {
 
     int todayFallecidos = currData.fallecidos == data[data.length - 4].fallecidos?0:currData.fallecidos - data[data.length - 4].fallecidos;
     int todayRecuperados = currData.recuperados == data[data.length - 4].recuperados?0:currData.recuperados - data[data.length - 4].recuperados;
-    print(currData.fallecidos);
-    print(data[data.length-3].fallecidos);
     GlobalShowInfo globalData = GlobalShowInfo(
         todayNewCases,
         todayFallecidos,
