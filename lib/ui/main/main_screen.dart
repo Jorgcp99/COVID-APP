@@ -1,4 +1,3 @@
-
 import 'package:covid_app/data/district.dart';
 import 'package:covid_app/data/district_data.dart';
 import 'package:covid_app/data/global_show_info.dart';
@@ -32,9 +31,9 @@ class _MainScreenState extends State<MainScreen> implements MainView {
     _presenter = MainPresenter(this, HttpRemoteRepository(Client()));
     _presenter.getDistrictList();
     _districts = [];
-    _selectedDistrictName = 'Seleccione un distrito';
+    _selectedDistrictName = 'Buscar un distrito';
     _selectedDistrict = DistrictData('', '', 0, 0, 0.0);
-    _globalData = GlobalShowInfo(0,0,0,0,0,0,0,0);
+    _globalData = GlobalShowInfo(0, 0, 0, 0, 0, 0, 0, 0);
     _sufixIcon = IconButton(
       icon: Icon(Icons.search),
     );
@@ -56,77 +55,126 @@ class _MainScreenState extends State<MainScreen> implements MainView {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Container(
-          child: SingleChildScrollView(
-            child: (Column(
+        body: SingleChildScrollView(
+          child: Container(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Stack(
-                  overflow: Overflow.visible,
-                  children: <Widget>[
-                    ClipPath(
-                      clipper: HeaderClipper(),
-                      child: Container(
-                        margin: EdgeInsets.only(top: 5),
-                        height: 250,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://www.lugaresconhistoria.com/wp-content/uploads/2013/03/gran_vc3ada_madrid_desde_callao-felipe-gabaldc3b3n.jpg'),
-                                fit: BoxFit.cover)),
-                        child: Container(
-                          color: Colors.black.withOpacity(0.35),
-                        ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 40, 0, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'CO',
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w800,
+                            color: Color.fromRGBO(0, 120, 185, 1.0),
+                            fontFamily: GoogleFonts.archivoNarrow().fontFamily),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 80),
+                      Text(
+                        'VID-A',
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w800,
+                            color: Color.fromRGBO(101, 199, 178, 1.0),
+                            fontFamily: GoogleFonts.archivoNarrow().fontFamily),
+                      ),
+                      Text(
+                        'PP',
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w800,
+                            color: Color.fromRGBO(0, 120, 185, 1.0),
+                            fontFamily: GoogleFonts.archivoNarrow().fontFamily),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Center(
+                    child: Container(
+                      height: 120,
+                      width: MediaQuery.of(context).size.width * 0.90,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                          color: Color.fromRGBO(238, 244, 243, 1.0)),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
-                          Text(
-                            'CO',
-                            style: TextStyle(
-                                fontSize: 50,
-                                fontWeight: FontWeight.w800,
-                                color: Color.fromRGBO(248, 248, 248, 1.0),
-                                fontFamily:
-                                    GoogleFonts.archivoNarrow().fontFamily),
+                          Image.asset(
+                            'assets/covidWorld.png',
+                            height: 100,
                           ),
-                          Text(
-                            'VID-A',
-                            style: TextStyle(
-                                fontSize: 50,
-                                fontWeight: FontWeight.w800,
-                                color: Color.fromRGBO(101, 199, 178, 1.0),
-                                fontFamily:
-                                    GoogleFonts.archivoNarrow().fontFamily),
-                          ),
-                          Text(
-                            'PP',
-                            style: TextStyle(
-                                fontSize: 50,
-                                fontWeight: FontWeight.w800,
-                                color: Color.fromRGBO(248, 248, 248, 1.0),
-                                fontFamily:
-                                    GoogleFonts.archivoNarrow().fontFamily),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  "COVID-19",
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(61, 94, 86, 1.0),
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text("Síntomas mas frecuentes",
+                                    style: TextStyle(
+                                        color: Color.fromRGBO(61, 94, 86, 1.0),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold)),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 10, 20, 0),
+                                  child: Container(
+                                    height: 28,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0)),
+                                        border: Border.all(
+                                          width: 1,
+                                          color:
+                                              Color.fromRGBO(61, 94, 86, 1.0),
+                                        )),
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            10, 0, 10, 0),
+                                        child: Text("Consultar",
+                                            style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    61, 94, 86, 1.0),
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold)),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Positioned(
-                      top: 220,
-                      left: 20,
-                      child: Text(
-                        _presenter.getFormattedDate(),
-                        style: TextStyle(fontSize: 27),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
+                  padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
+                  child: Text(
+                    _presenter.getFormattedDate(),
+                    style: TextStyle(
+                        color: Color.fromRGBO(0, 0, 0, 1.0),
+                        fontSize: 27,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 10, 30, 5),
                   child: Container(
+                    height: 50,
                     child: Form(
                       child: TypeAheadField(
                         textFieldConfiguration: TextFieldConfiguration(
@@ -134,7 +182,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                             decoration: InputDecoration(
                               labelText: _selectedDistrictName,
                               suffixIcon: _sufixIcon,
-                              border: OutlineInputBorder(),
+                              border: InputBorder.none,
                             )),
                         suggestionsCallback: (pattern) {
                           return getDistrictClue(pattern);
@@ -177,98 +225,141 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                 ),
                 Container(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text('Situación en Madrid', style: TextStyle(fontSize: 25),),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
+                        child: Center(
+                          child: Text(
+                            'Situación en Madrid',
+                            style: TextStyle(
+                                fontSize: 21, fontWeight: FontWeight.bold),
                           ),
-                        ],
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.97,
-                            height: 300,
-                            child: WebView(
-                              initialUrl:
-                                  'https://datawrapper.dwcdn.net/tWpPl/5/',
-                              javascriptMode: JavascriptMode.unrestricted,
-                              onWebViewCreated:
-                                  (WebViewController webViewController) {
-                                _controller = webViewController;
-                                _controller.loadUrl(
-                                    'https://datawrapper.dwcdn.net/tWpPl/5/');
-                              },
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.90,
+                              height: 300,
+                              child: WebView(
+                                initialUrl:
+                                    'https://datawrapper.dwcdn.net/tWpPl',
+                                javascriptMode: JavascriptMode.unrestricted,
+                                onWebViewCreated:
+                                    (WebViewController webViewController) {
+                                  _controller = webViewController;
+                                  _controller.loadUrl(
+                                      'https://datawrapper.dwcdn.net/tWpPl/5/');
+                                },
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        elevation: 3.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(14))),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(240, 240, 240, 1.0),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(18.0),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Card(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          elevation: 5.0,
+                          color: Color.fromRGBO(251, 251, 251, 1.0),
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(14))),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.93,
+                            height: 105,
                             child: Column(
                               children: <Widget>[
-                                Text(
-                                  'Recuento total',
-                                  style: TextStyle(fontSize: 20),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 15, 0, 20),
+                                  child: Text("Última información",
+                                      style: TextStyle(fontSize: 20)),
                                 ),
-                                buildChart(0),
-                                buildChart(1),
-                                buildChart(2),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Column(
+                                          children: <Widget>[
+                                            Text(
+                                              "+" +
+                                                  _globalData.todayCases
+                                                      .toString(),
+                                            ),
+                                            Text("Positivos PCR")
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Column(
+                                          children: <Widget>[
+                                            Text(
+                                              "+" +
+                                                  _globalData.tadayFallecidos
+                                                      .toString(),
+                                            ),
+                                            Text("Fallecidos")
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Column(
+                                          children: <Widget>[
+                                            Text(
+                                              "+" +
+                                                  _globalData.todayRecuperados
+                                                      .toString(),
+                                            ),
+                                            Text("Recuperados")
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        padding: const EdgeInsets.only(top: 10),
                         child: Card(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
-                          elevation: 3.0,
-                          color: Color.fromRGBO(240, 240, 240, 1.0),
+                          elevation: 5.0,
                           shape: RoundedRectangleBorder(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(14))),
+                                  BorderRadius.all(Radius.circular(14))),
                           child: Container(
-                            height: 80,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      _globalData.todayCases.toString(),
-
-                                    ),
-                                  ],
-                                ),Row(
-                                  children: <Widget>[
-                                    Text(
-                                      _globalData.tadayFallecidos.toString(),
-                                    ),
-                                  ],
-                                ),Row(
-                                  children: <Widget>[
-                                    Text(
-                                      _globalData.todayRecuperados.toString(),
-
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            width: MediaQuery.of(context).size.width * 0.93,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(251, 251, 251, 1.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'Recuento total',
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  buildChart(0),
+                                  buildChart(1),
+                                  buildChart(2),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -277,45 +368,42 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(20.0),
-                            child: Text('Ultimas noticias', style: TextStyle(fontSize: 25),),
+                            child: Text(
+                              'Últimas noticias',
+                              style: TextStyle(
+                                  fontSize: 21, fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20.0, 0, 20, 15),
-                        child: Card(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          elevation: 3.0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(14))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.87,
-                                height: 755,
-                                child: WebView(
-                                  initialUrl:
-                                  'https://twitter.com/i/events/1219057585707315201',
-                                  javascriptMode: JavascriptMode.unrestricted,
-                                  onWebViewCreated:
-                                      (WebViewController webViewController) {
-                                    _controller = webViewController;
-                                    _controller.loadUrl(
-                                        'https://twitter.com/i/events/1219057585707315201');
-                                  },
-                                ),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 1550,
+                              child: WebView(
+                                initialUrl:
+                                    'https://twitter.com/sanidadgob',
+                                javascriptMode: JavascriptMode.unrestricted,
+                                onWebViewCreated:
+                                    (WebViewController webViewController) {
+                                  _controller = webViewController;
+                                  _controller.loadUrl(
+                                      'https://twitter.com/sanidadgob');
+                                },
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 )
               ],
-            )),
+            ),
           ),
         ),
       ),
@@ -340,87 +428,95 @@ class _MainScreenState extends State<MainScreen> implements MainView {
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: size.height,
-                color: Color.fromRGBO(240, 240, 240, 1.0),
-                child: _selectedDistrict.todayNewCases==null?Container():
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 6),
-                            child: Text(
-                              'Hoy',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 5),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    _selectedDistrict.todayNewCases.toString(),
-                                    style: TextStyle(fontSize: 24, color: Colors.red),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 15),
-                                    child: Icon(
-                                      Icons.arrow_drop_up,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 15),
-                                    child: showProgressPercentage(
-                                        _selectedDistrict.differencePercentage),
-                                  )
-                                ],
-                              ),
-                            )),
-                      ],
-                    ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                color: Color.fromRGBO(251, 251, 251, 1.0),
+                child: _selectedDistrict.todayNewCases == null
+                    ? Container()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 6),
-                              child: Text(
-                                'Ayer',
-                                style: TextStyle(fontSize: 20),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 6),
+                                  child: Text(
+                                    'Hoy',
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          Expanded(
-                              child: Padding(
+                              Expanded(
+                                  child: Padding(
                                 padding: const EdgeInsets.only(bottom: 5),
                                 child: Row(
                                   children: <Widget>[
                                     Text(
-                                      _selectedDistrict.yesterdayNewCases.toString(),
-                                      style: TextStyle(fontSize: 24, color: Colors.red),
+                                      _selectedDistrict.todayNewCases
+                                          .toString(),
+                                      style: TextStyle(
+                                          fontSize: 24, color: Colors.red),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(bottom: 15),
+                                      padding:
+                                          const EdgeInsets.only(bottom: 15),
                                       child: Icon(
                                         Icons.arrow_drop_up,
                                         color: Colors.red,
                                       ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 15),
+                                      child: showProgressPercentage(
+                                          _selectedDistrict
+                                              .differencePercentage),
                                     )
                                   ],
                                 ),
                               )),
+                            ],
+                          ),
+                          Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 6),
+                                    child: Text(
+                                      'Ayer',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                    child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        _selectedDistrict.yesterdayNewCases
+                                            .toString(),
+                                        style: TextStyle(
+                                            fontSize: 24, color: Colors.red),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 15),
+                                        child: Icon(
+                                          Icons.arrow_drop_up,
+                                          color: Colors.red,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
               ),
             ),
           ),
@@ -467,11 +563,17 @@ class _MainScreenState extends State<MainScreen> implements MainView {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                index==0?'Infectados':index==1?'Fallecidos':'Recuperados',
+                index == 0
+                    ? 'Infectados'
+                    : index == 1 ? 'Fallecidos' : 'Recuperados',
                 style: TextStyle(fontSize: 17),
               ),
               Text(
-                index==0?_globalData.totalCases.toString():index==1?_globalData.fallecidos.toString():_globalData.recuperados.toString(),
+                index == 0
+                    ? _globalData.totalCases.toString()
+                    : index == 1
+                        ? _globalData.fallecidos.toString()
+                        : _globalData.recuperados.toString(),
                 style: TextStyle(fontSize: 15),
               )
             ],
@@ -481,12 +583,17 @@ class _MainScreenState extends State<MainScreen> implements MainView {
             child: TweenAnimationBuilder(
                 tween: SizeTween(
                     begin: Size(0, 5),
-                    end: Size(_chartMaxWidth * (index==0?1:index==1?0.15:0.36), 5)),
+                    end: Size(
+                        _chartMaxWidth *
+                            (index == 0 ? 1 : index == 1 ? 0.15 : 0.36),
+                        5)),
                 duration: Duration(milliseconds: 1600),
                 builder: (_, Size size, __) {
                   return Container(
                     decoration: BoxDecoration(
-                        color: index==0?Colors.yellow:index==1?Colors.red:Colors.green,
+                        color: index == 0
+                            ? Colors.yellow
+                            : index == 1 ? Colors.red : Colors.green,
                         borderRadius: BorderRadius.all(Radius.circular(4))),
                     width: size.width,
                     height: 9,
@@ -497,7 +604,6 @@ class _MainScreenState extends State<MainScreen> implements MainView {
       ),
     );
   }
-
 
   List<District> getDistrictClue(String query) {
     List<District> districts = [];
@@ -532,7 +638,6 @@ class _MainScreenState extends State<MainScreen> implements MainView {
   showGlobalData(GlobalShowInfo data) {
     setState(() {
       _globalData = data;
-
     });
   }
 }
