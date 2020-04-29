@@ -33,6 +33,7 @@ class _NavigationBarState extends State<NavigationBar> {
     return Scaffold(
       body: screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.shifting,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.event),
@@ -48,7 +49,9 @@ class _NavigationBarState extends State<NavigationBar> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Color.fromRGBO(101, 199, 178, 1.0),
+        unselectedItemColor: Colors.grey,
+        unselectedLabelStyle: TextStyle(color: Colors.grey),
         onTap: _onItemTapped,
       ),
     );
