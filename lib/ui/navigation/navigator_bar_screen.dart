@@ -3,6 +3,7 @@
 import 'package:covid_app/ui/chat_bot/chat_bot_screen.dart';
 import 'package:covid_app/ui/events/events_screen.dart';
 import 'package:covid_app/ui/main/main_screen.dart';
+import 'package:covid_app/ui/scanner/scanner_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationBar extends StatefulWidget {
@@ -16,6 +17,7 @@ class _NavigationBarState extends State<NavigationBar> {
 
   @override
   void initState() {
+    screens.add(ScannerScreen());
     screens.add(EventsScreen());
     screens.add(MainScreen());
     screens.add(ChatBotScreen());
@@ -35,6 +37,10 @@ class _NavigationBarState extends State<NavigationBar> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt),
+            title: Text('Scanner'),
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.event),
             title: Text('Events'),
           ),
@@ -49,6 +55,7 @@ class _NavigationBarState extends State<NavigationBar> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Colors.black,
         onTap: _onItemTapped,
       ),
     );
