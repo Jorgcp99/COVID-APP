@@ -2,6 +2,7 @@ import 'package:covid_app/data/district.dart';
 import 'package:covid_app/data/district_data.dart';
 import 'package:covid_app/data/global_show_info.dart';
 import 'package:covid_app/repository/remote_repository/http_remote_repository.dart';
+import 'package:covid_app/ui/chat_bot/chat_bot_screen.dart';
 import 'package:covid_app/ui/main/main_presenter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -61,14 +62,14 @@ class _MainScreenState extends State<MainScreen> implements MainView {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 40, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 50, 0, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         'CO',
                         style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 29,
                             fontWeight: FontWeight.w800,
                             color: Color.fromRGBO(0, 120, 185, 1.0),
                             fontFamily: GoogleFonts.archivoNarrow().fontFamily),
@@ -76,7 +77,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                       Text(
                         'VID-A',
                         style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 29,
                             fontWeight: FontWeight.w800,
                             color: Color.fromRGBO(101, 199, 178, 1.0),
                             fontFamily: GoogleFonts.archivoNarrow().fontFamily),
@@ -84,7 +85,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                       Text(
                         'PP',
                         style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 29,
                             fontWeight: FontWeight.w800,
                             color: Color.fromRGBO(0, 120, 185, 1.0),
                             fontFamily: GoogleFonts.archivoNarrow().fontFamily),
@@ -93,7 +94,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top: 15),
                   child: Center(
                     child: Container(
                       height: 120,
@@ -124,31 +125,39 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                                 Text("Síntomas mas frecuentes",
                                     style: TextStyle(
                                         color: Color.fromRGBO(61, 94, 86, 1.0),
-                                        fontSize: 16,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold)),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(0, 10, 20, 0),
-                                  child: Container(
-                                    height: 28,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0)),
-                                        border: Border.all(
-                                          width: 1,
-                                          color:
-                                              Color.fromRGBO(61, 94, 86, 1.0),
-                                        )),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 0, 10, 0),
-                                        child: Text("Consultar",
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    61, 94, 86, 1.0),
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold)),
+                                      const EdgeInsets.fromLTRB(0, 10, 10, 0),
+                                  child: GestureDetector(
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ChatBotScreen()),
+                                    ),
+                                    child: Container(
+                                      height: 28,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0)),
+                                          border: Border.all(
+                                            width: 1,
+                                            color:
+                                                Color.fromRGBO(61, 94, 86, 1.0),
+                                          )),
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 0, 10, 0),
+                                          child: Text("Consultar",
+                                              style: TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      61, 94, 86, 1.0),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -172,47 +181,56 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 10, 30, 5),
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
                   child: Container(
-                    height: 50,
-                    child: Form(
-                      child: TypeAheadField(
-                        textFieldConfiguration: TextFieldConfiguration(
-                            controller: _typeAheadController,
-                            decoration: InputDecoration(
-                              labelText: _selectedDistrictName,
-                              suffixIcon: _sufixIcon,
-                              border: InputBorder.none,
-                            )),
-                        suggestionsCallback: (pattern) {
-                          return getDistrictClue(pattern);
-                        },
-                        itemBuilder: (context, suggestion) {
-                          District dis = suggestion as District;
-                          return ListTile(
-                            title: Text(dis.name),
-                          );
-                        },
-                        onSuggestionSelected: (suggestion) {
-                          District dist = suggestion as District;
-                          _presenter.getDistrictInfo(dist.id);
-                          _typeAheadController.text = dist.name;
-                          expandDistrictInfo();
-                          setState(() {
-                            _sufixIcon = IconButton(
-                              icon: Icon(Icons.clear),
-                              onPressed: () {
-                                _typeAheadController.clear();
-                                minimizeDistrictInfo();
-                                setState(() {
-                                  _sufixIcon = IconButton(
-                                    icon: Icon(Icons.search),
-                                  );
-                                });
-                              },
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        border: Border.all(
+                          width: 1,
+                          color: Colors.grey,
+                        )),
+                    height: 43,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Form(
+                        child: TypeAheadField(
+                          textFieldConfiguration: TextFieldConfiguration(
+                              controller: _typeAheadController,
+                              decoration: InputDecoration(
+                                hintText: _selectedDistrictName,
+                                suffixIcon: _sufixIcon,
+                                border: InputBorder.none,
+                              )),
+                          suggestionsCallback: (pattern) {
+                            return getDistrictClue(pattern);
+                          },
+                          itemBuilder: (context, suggestion) {
+                            District dis = suggestion as District;
+                            return ListTile(
+                              title: Text(dis.name),
                             );
-                          });
-                        },
+                          },
+                          onSuggestionSelected: (suggestion) {
+                            District dist = suggestion as District;
+                            _presenter.getDistrictInfo(dist.id);
+                            _typeAheadController.text = dist.name;
+                            expandDistrictInfo();
+                            setState(() {
+                              _sufixIcon = IconButton(
+                                icon: Icon(Icons.clear),
+                                onPressed: () {
+                                  _typeAheadController.clear();
+                                  minimizeDistrictInfo();
+                                  setState(() {
+                                    _sufixIcon = IconButton(
+                                      icon: Icon(Icons.search),
+                                    );
+                                  });
+                                },
+                              );
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -335,7 +353,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 30),
                         child: Card(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           elevation: 5.0,
@@ -348,11 +366,11 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                               color: Color.fromRGBO(251, 251, 251, 1.0),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(18.0),
+                              padding: const EdgeInsets.fromLTRB(25, 18, 25, 23),
                               child: Column(
                                 children: <Widget>[
                                   Text(
-                                    'Recuento total',
+                                    'Recuento total Comunidad Madrid',
                                     style: TextStyle(fontSize: 20),
                                   ),
                                   buildChart(0),
@@ -364,41 +382,45 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                           ),
                         ),
                       ),
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                              'Últimas noticias',
-                              style: TextStyle(
-                                  fontSize: 21, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 1550,
-                              child: WebView(
-                                initialUrl:
-                                    'https://twitter.com/sanidadgob',
-                                javascriptMode: JavascriptMode.unrestricted,
-                                onWebViewCreated:
-                                    (WebViewController webViewController) {
-                                  _controller = webViewController;
-                                  _controller.loadUrl(
-                                      'https://twitter.com/sanidadgob');
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+//                      Row(
+//                        children: <Widget>[
+//                          Padding(
+//                            padding: const EdgeInsets.all(20.0),
+//                            child: Text(
+//                              'Últimas noticias',
+//                              style: TextStyle(
+//                                  fontSize: 21, fontWeight: FontWeight.bold),
+//                            ),
+//                          ),
+//                        ],
+//                      ),
+//                      Padding(
+//                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+//                        child: Row(
+//                          mainAxisAlignment: MainAxisAlignment.center,
+//                          children: <Widget>[
+//                            Container(
+//                              decoration: BoxDecoration(
+//                                borderRadius: BorderRadius.all(
+//                                  Radius.circular(20.0),
+//                                ),
+//                              ),
+//                              width: MediaQuery.of(context).size.width * 0.95,
+//                              height: 1200,
+//                              child: WebView(
+//                                initialUrl: 'https://twitter.com/sanidadgob',
+//                                javascriptMode: JavascriptMode.unrestricted,
+//                                onWebViewCreated:
+//                                    (WebViewController webViewController) {
+//                                  _controller = webViewController;
+//                                  _controller.loadUrl(
+//                                      'https://twitter.com/sanidadgob');
+//                                },
+//                              ),
+//                            ),
+//                          ],
+//                        ),
+//                      ),
                     ],
                   ),
                 )
