@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
@@ -10,7 +8,6 @@ class ScannerScreen extends StatefulWidget {
 }
 
 class _ScannerScreenState extends State<ScannerScreen> {
-
   Text _statusText;
   TextEditingController _outputController;
 
@@ -24,21 +21,60 @@ class _ScannerScreenState extends State<ScannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Scanner'),),
+      appBar: AppBar(
+        title: Text(
+          'Scanner',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+      ),
       body: Column(
         children: <Widget>[
           SizedBox(
-            height: 200,
+            height: 90,
           ),
           Center(
-            child: RaisedButton(
-              child: Text('Scan'),
-              onPressed: ()=> _scan(),
+            child: GestureDetector(
+              onTap: () => _scan(),
+              child: Container(
+                height: 158,
+                width: 158,
+                decoration: BoxDecoration(
+                    color: Color.fromRGBO(101, 199, 178, 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(80.0))),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: Text("Scan",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 200),
-            child: _statusText,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 100),
+              child: Container(
+                height: 80,
+                width: MediaQuery.of(context).size.width * 0.78,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(255, 255, 255, 1.0),
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(0.0, 2.5), //(x,y)
+                      blurRadius: 3.0,
+                    ),
+                  ],
+                ),
+                child: Center(child: _statusText),
+              ),
+            ),
           )
         ],
       ),
@@ -58,19 +94,33 @@ class _ScannerScreenState extends State<ScannerScreen> {
         print('x-x-x-x-x-x-x-x-x-x-x');
         print(codes[0]);
         print(codes[1]);
-        Firestore.instance.collection('eventos').document(codes[0]).collection('reservas').getDocuments().then((reservasList){
-          reservasList.documents.forEach((reserva){
-            if(reserva.data['id_usuario']==codes[1] && reserva.data['is_checked']==false){
-              Firestore.instance.collection('eventos').document(codes[0]).collection('reservas').document(reserva.documentID).updateData({
-                'is_checked': true
-              });
+        Firestore.instance
+            .collection('eventos')
+            .document(codes[0])
+            .collection('reservas')
+            .getDocuments()
+            .then((reservasList) {
+          reservasList.documents.forEach((reserva) {
+            if (reserva.data['id_usuario'] == codes[1] &&
+                reserva.data['is_checked'] == false) {
+              Firestore.instance
+                  .collection('eventos')
+                  .document(codes[0])
+                  .collection('reservas')
+                  .document(reserva.documentID)
+                  .updateData({'is_checked': true});
               setState(() {
-              _statusText = Text('Todo correcto', style: TextStyle(fontSize: 20, color: Colors.greenAccent),);
+                _statusText = Text(
+                  'Todo correcto',
+                  style: TextStyle(fontSize: 20, color: Colors.greenAccent),
+                );
               });
-            }else{
+            } else {
               setState(() {
-              _statusText = Text('Algo no va bien', style: TextStyle(fontSize: 20, color: Colors.red),);
-
+                _statusText = Text(
+                  'Algo no va bien',
+                  style: TextStyle(fontSize: 20, color: Colors.red),
+                );
               });
             }
           });
