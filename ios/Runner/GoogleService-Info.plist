@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Necesito tu camara para poder verte</string>
 	<key>CLIENT_ID</key>
 	<string>916159493759-j0ljp7nfm64jck99lo1cj6booru8571h.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
