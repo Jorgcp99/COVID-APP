@@ -1,20 +1,21 @@
 
 
 class Event{
+  String id;
   String title;
   String date;
   String eventLocation;
   String streetAddress;
   int numEntradas;
 
-  Event(this.title, this.date, this.eventLocation, this.streetAddress, this.numEntradas);
+  Event(this.id, this.title, this.date, this.eventLocation, this.streetAddress, this.numEntradas);
 
   factory Event.fromMap(Map<String, dynamic> map){
     String title =  map['title'];
     String date =  map['dtstart'];
     String eventLocation = map['event-location'];
     String streetAddress = map['street-addres'];
-    return Event(title, date, eventLocation, streetAddress, 0);
+    return Event('',title, date, eventLocation, streetAddress, 0);
   }
 
   Map<String, dynamic> toMap() {
