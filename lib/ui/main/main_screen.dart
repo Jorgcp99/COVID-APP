@@ -69,7 +69,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                       Text(
                         'CO',
                         style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 29,
                             fontWeight: FontWeight.w800,
                             color: Color.fromRGBO(0, 120, 185, 1.0),
                             fontFamily: GoogleFonts.archivoNarrow().fontFamily),
@@ -77,7 +77,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                       Text(
                         'VID-A',
                         style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 29,
                             fontWeight: FontWeight.w800,
                             color: Color.fromRGBO(101, 199, 178, 1.0),
                             fontFamily: GoogleFonts.archivoNarrow().fontFamily),
@@ -85,7 +85,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                       Text(
                         'PP',
                         style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 29,
                             fontWeight: FontWeight.w800,
                             color: Color.fromRGBO(0, 120, 185, 1.0),
                             fontFamily: GoogleFonts.archivoNarrow().fontFamily),
@@ -94,7 +94,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top: 15),
                   child: Center(
                     child: Container(
                       height: 120,
@@ -125,11 +125,11 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                                 Text("Síntomas mas frecuentes",
                                     style: TextStyle(
                                         color: Color.fromRGBO(61, 94, 86, 1.0),
-                                        fontSize: 16,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold)),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(0, 10, 20, 0),
+                                      const EdgeInsets.fromLTRB(0, 10, 10, 0),
                                   child: GestureDetector(
                                     onTap: () => Navigator.push(
                                       context,
@@ -189,7 +189,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                           width: 1,
                           color: Colors.grey,
                         )),
-                    height: 50,
+                    height: 43,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                       child: Form(
@@ -197,7 +197,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                           textFieldConfiguration: TextFieldConfiguration(
                               controller: _typeAheadController,
                               decoration: InputDecoration(
-                                labelText: _selectedDistrictName,
+                                hintText: _selectedDistrictName,
                                 suffixIcon: _sufixIcon,
                                 border: InputBorder.none,
                               )),
@@ -353,7 +353,7 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 30),
                         child: Card(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           elevation: 5.0,
@@ -382,18 +382,18 @@ class _MainScreenState extends State<MainScreen> implements MainView {
                           ),
                         ),
                       ),
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                              'Últimas noticias',
-                              style: TextStyle(
-                                  fontSize: 21, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
+//                      Row(
+//                        children: <Widget>[
+//                          Padding(
+//                            padding: const EdgeInsets.all(20.0),
+//                            child: Text(
+//                              'Últimas noticias',
+//                              style: TextStyle(
+//                                  fontSize: 21, fontWeight: FontWeight.bold),
+//                            ),
+//                          ),
+//                        ],
+//                      ),
 //                      Padding(
 //                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
 //                        child: Row(

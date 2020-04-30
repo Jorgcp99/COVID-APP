@@ -202,7 +202,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                   Stack(
                     children: <Widget>[
                       Container(
-                        height: MediaQuery.of(context).size.height - 140,
+                        height: MediaQuery.of(context).size.height - 100,
                         child: ListView.builder(
                           padding: new EdgeInsets.fromLTRB(0, 130, 0, 80),
                           shrinkWrap: false,
@@ -226,13 +226,13 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   Widget _buildTextComposer() {
     return Padding(
       padding:
-      EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height - 140, 0, 0),
+      EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height - 135, 0, 0),
       child: Center(
         child: new ClipRect(
           child: new BackdropFilter(
             filter: new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
             child: Container(
-              height: 50,
+              height: 60,
               color: Color.fromRGBO(0, 0, 0, 0.0),
               //margin: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Padding(
